@@ -61,7 +61,9 @@ variables and are never stored in the model files.
 - `users` stores a unique username, a `passwordHash` (never a plaintext
   password), and a role (`buyer` or `admin`).
 - `vehicles` stores the vehicle details, category (`muv`, `suv`, or `sedan`),
-  and price.
+  price, and an optional `vehicleUrl` for its image. The URL points to an
+  externally or locally hosted image; this field does not implement file
+  uploads or image storage.
 - `purchases` links users and vehicles, with quantity, purchase time, and a
   unit-price snapshot so later vehicle price changes do not alter purchase
   history.

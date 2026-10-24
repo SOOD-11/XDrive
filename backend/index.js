@@ -26,7 +26,11 @@ async function start() {
   });
 }
 
-start().catch((error) => {
-  console.error('Failed to start backend:', error);
-  process.exitCode = 1;
-});
+if (require.main === module) {
+  start().catch((error) => {
+    console.error('Failed to start backend:', error);
+    process.exitCode = 1;
+  });
+}
+
+module.exports = app;

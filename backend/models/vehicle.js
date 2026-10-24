@@ -28,6 +28,13 @@ module.exports = (sequelize, DataTypes) =>
           min: 0,
         },
       },
+      vehicleUrl: {
+        type: DataTypes.STRING(2048),
+        allowNull: true,
+        validate: {
+          isUrl: true,
+        },
+      },
     },
     {
       tableName: 'vehicles',
