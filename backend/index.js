@@ -2,7 +2,7 @@ require('dotenv').config();
 
 const express = require('express');
 const { sequelize } = require('./models');
-
+const authRouter=require('./routes/auth.routes');
 const app = express();
 const port = Number(process.env.PORT) || 3000;
 
@@ -17,6 +17,11 @@ app.get('/health', async (_req, res) => {
     res.status(503).json({ status: 'error', database: 'disconnected' });
   }
 });
+
+
+
+app.use('/api/auth',authRouter);
+
 
 async function start() {
   await sequelize.authenticate();
