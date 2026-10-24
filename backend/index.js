@@ -3,6 +3,7 @@ require('dotenv').config();
 const express = require('express');
 const { sequelize } = require('./models');
 const authRouter=require('./routes/auth.routes');
+const vehicleRouter=require('./routes/vehicle.routes')
 const app = express();
 const port = Number(process.env.PORT) || 3000;
 
@@ -21,6 +22,7 @@ app.get('/health', async (_req, res) => {
 
 
 app.use('/api/auth',authRouter);
+app.use('/api/vehicles', vehicleRouter);
 
 
 async function start() {
