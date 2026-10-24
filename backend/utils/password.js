@@ -1,4 +1,16 @@
-const { scryptSync, timingSafeEqual } = require('node:crypto');
+
+
+
+
+
+const { randomBytes, scryptSync, timingSafeEqual } = require('crypto');
+
+function hashPassword(password) {
+  const salt = randomBytes(16);
+  const key = scryptSync(password, salt, 64);
+
+  return `scrypt$${salt.toString('hex')}$${key.toString('hex')}`;
+}
 
 function verifyPassword(password, storedHash) {
   if (typeof password !== 'string' || typeof storedHash !== 'string') {
@@ -16,4 +28,4 @@ function verifyPassword(password, storedHash) {
   return timingSafeEqual(savedKey, attemptedKey);
 }
 
-module.exports = { verifyPassword };
+module.exports = { verifyPassword ,hashPassword};
