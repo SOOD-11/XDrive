@@ -2,7 +2,7 @@
 
 const { Op } = require('sequelize');
 //const { Vehicle, Inventory } = require('../models');
-const { Vehicle, Inventory, sequelize } = require('../models');
+const { Vehicle, Inventory, Purchase,sequelize } = require('../models');
 function toVehicleResponse(vehicle) {
   return {
     id: vehicle.id,
@@ -199,4 +199,41 @@ async function updateVehicle(req, res) {
     return res.status(500).json({ error: 'Could not update vehicle' });
   }
 }
-module.exports = { listVehicles, searchVehicles, createVehicle,updateVehicle };
+async function deleteVehicle(req, res) {
+  if (req.user?.role !== 'admin') {
+    return res.status(403).json({ error: 'Admin access required' });
+  }
+
+  try {
+    const vehicle = await Vehicle.findByPk(req.params.id);
+
+    if (!vehicle) {
+      return res.status(404).json({ error: 'Vehicle not found' });
+    }
+
+    const purchaseCount = await Purchase.count({
+      where: { vehicleId: vehicle.id },
+    });
+
+    if (purchaseCount > 0) {
+      return res.status(409).json({
+        error: 'Cannot delete a vehicle with purchase history',
+      });
+    }
+
+    // The inventory foreign key uses ON DELETE CASCADE.
+    await vehicle.destroy();
+    return res.status(204).send();
+  } catch (error) {
+    // Handles a purchase added between the count and delete.
+    if (error.name === 'SequelizeForeignKeyConstraintError') {
+      return res.status(409).json({
+        error: 'Cannot delete a vehicle with purchase history',
+      });
+    }
+
+    console.error('Could not delete vehicle:', error);
+    return res.status(500).json({ error: 'Could not delete vehicle' });
+  }
+}
+module.exports = { listVehicles, searchVehicles, createVehicle,updateVehicle,deleteVehicle };

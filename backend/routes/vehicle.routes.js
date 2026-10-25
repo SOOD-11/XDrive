@@ -1,6 +1,6 @@
 const express = require('express');
 const { requireAuth } = require('../middlewares/auth');
-const { listVehicles ,searchVehicles,createVehicle,updateVehicle} = require('../controllers/vehicle.controller');
+const { listVehicles ,searchVehicles,createVehicle,updateVehicle,deleteVehicle} = require('../controllers/vehicle.controller');
 
 const router = express.Router();
 
@@ -8,4 +8,5 @@ router.get('/', requireAuth, listVehicles);
 router.get('/search', requireAuth, searchVehicles);
 router.post('/', requireAuth, createVehicle);
 router.put('/:id', requireAuth, updateVehicle);
+router.delete('/:id', requireAuth, deleteVehicle);
 module.exports = router;
