@@ -145,4 +145,58 @@ async function createVehicle(req, res) {
     return res.status(500).json({ error: 'Could not create vehicle' });
   }
 }
-module.exports = { listVehicles, searchVehicles, createVehicle };
+async function updateVehicle(req, res) {
+  if (req.user?.role !== 'admin') {
+    return res.status(403).json({ error: 'Admin access required' });
+  }
+
+  const body = req.body ?? {};
+  const changes = {};
+
+  for (const field of ['name', 'maker', 'color', 'category']) {
+    if (Object.hasOwn(body, field)) {
+      if (typeof body[field] !== 'string' || !body[field].trim()) {
+        return res.status(400).json({ error: `Invalid ${field}` });
+      }
+      changes[field] = body[field].trim();
+    }
+  }
+
+  if (changes.category && !['sedan', 'suv', 'muv'].includes(changes.category)) {
+    return res.status(400).json({ error: 'Invalid category' });
+  }
+
+  if (Object.hasOwn(body, 'price')) {
+    if (
+      body.price === '' ||
+      body.price === null ||
+      !Number.isFinite(Number(body.price)) ||
+      Number(body.price) < 0
+    ) {
+      return res.status(400).json({ error: 'Invalid price' });
+    }
+    changes.price = body.price;
+  }
+
+  // Stock changes belong in the purchase and restock APIs.
+  if (Object.hasOwn(body, 'quantityAvailable') || !Object.keys(changes).length) {
+    return res.status(400).json({ error: 'Invalid vehicle update' });
+  }
+
+  try {
+    const vehicle = await Vehicle.findByPk(req.params.id, {
+      include: [{ model: Inventory, as: 'inventory' }],
+    });
+
+    if (!vehicle) {
+      return res.status(404).json({ error: 'Vehicle not found' });
+    }
+
+    await vehicle.update(changes);
+    return res.json({ vehicle: toVehicleResponse(vehicle) });
+  } catch (error) {
+    console.error('Could not update vehicle:', error);
+    return res.status(500).json({ error: 'Could not update vehicle' });
+  }
+}
+module.exports = { listVehicles, searchVehicles, createVehicle,updateVehicle };
