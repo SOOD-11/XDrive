@@ -1,7 +1,7 @@
 # XDrive
 
 XDrive is a full-stack dealership platform for managing vehicle inventory, customer browsing, and sales operations. It gives car dealers a simple way to list vehicles, update stock, upload photos, and let buyers search for available cars without leaving the app.
-
+Link :  x-drive-q7lfeupud-sanchitsood3100-gmailcoms-projects.vercel.app
 ## Why XDrive?
 
 XDrive is built to solve a common dealership pain point: disconnected inventory management and customer buying flow. Instead of juggling spreadsheets, static websites, or fragmented admin tools, XDrive brings the whole process into a single platform.
@@ -183,6 +183,8 @@ npm run preview  # preview the production build
 - The backend uses `sequelize.sync()` is intentionally avoided; schema changes should be managed with migrations.
 - Keep `.env` files private and do not commit them to Git.
 - Cloudinary variables are optional for image upload workflows, depending on how the backend is configured for media storage.
+
+- 
 
 ## Summary
 
