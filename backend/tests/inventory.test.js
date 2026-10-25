@@ -11,13 +11,14 @@ after(async () => {
 
 test('buyer can see vehicles with their stock', async () => {
   const login = await request(app)
-    .post('/api/auth/login')
-    .send({
-      username: 'seed_buyer',
-      password: 123445,
-    });
+  .post('/api/auth/login')
+  .send({
+    username: 'seed_buyer',
+    password: process.env.SEED_BUYER_PASSWORD,
+  });
 
-  assert.equal(login.status, 200);
+assert.equal(login.status, 200, JSON.stringify(login.body));
+
 
   const response = await request(app)
     .get('/api/vehicles')

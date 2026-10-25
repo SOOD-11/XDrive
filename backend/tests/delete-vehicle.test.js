@@ -112,5 +112,7 @@ test('vehicle with purchase history cannot be deleted', async () => {
 
   assert.equal(response.status, 409);
   assert.ok(await Vehicle.findByPk(id));
-  assert.ok(await Purchase.findByPk(purchase.id));
+assert.ok(await Purchase.findOne({
+  where: { userId: buyer.id, vehicleId: id },
+}));
 });
