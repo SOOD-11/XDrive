@@ -3,8 +3,10 @@ const { requireAuth } = require('../middlewares/auth');
 const { listVehicles ,searchVehicles,createVehicle,updateVehicle,deleteVehicle} = require('../controllers/vehicle.controller');
 const { purchaseVehicle } = require('../controllers/purchase.controller');
 
+const { restockVehicle } = require('../controllers/inventory.controller');
 const router = express.Router();
 
+router.post('/:id/restock', requireAuth, restockVehicle);
 router.get('/', requireAuth, listVehicles);
 router.get('/search', requireAuth, searchVehicles);
 router.post('/', requireAuth, createVehicle);
